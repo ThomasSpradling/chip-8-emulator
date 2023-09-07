@@ -3,5 +3,5 @@
 int main() {
   auto *emulator = new Emulator();
   
-  // emscripten_set_main_loop(, 60, 1);
+  // emscripten_set_main_loop(emulator->runCycle, 60, 1);
 }

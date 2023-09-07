@@ -11,10 +11,10 @@ void Emulator::runCycle() {
   }
 
   if (chip8->dt > 0) {
-    chip8->dt = max(chip8->dt, 0);
+    chip8->dt = max(chip8->dt, (uint8_t) 0);
   }
   if (chip8->st > 0) {
-    chip8->st = max(chip8->st, 0);
+    chip8->st = max(chip8->st, (uint8_t) 0);
     speaker->playSound();
   }
 
