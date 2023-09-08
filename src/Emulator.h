@@ -1,11 +1,13 @@
 #include "Chip8.h"
-#include "Keyboard.h"
-#include "Display.h"
-#include "Speaker.h"
+#include "InputOutput/Keyboard.h"
+#include "InputOutput/Display.h"
+#include "InputOutput/Speaker.h"
 
 class Emulator {
   public:
+    int time;
     Emulator();
+    ~Emulator();
     void runCycle();
 
   private:

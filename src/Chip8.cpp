@@ -2,7 +2,11 @@
 #include <cstdlib>
 
 void Chip8::init() {
+  registers.fill(0);
+  dt = st = I = sp = pc = 0;
 
+  stack.fill(0);
+  memory.fill(0);
 }
 
 void Chip8::fetch_instruction() {
@@ -18,17 +22,19 @@ void Chip8::execute_instruction() {
   uint8_t kk = current_instruction & 0x00FF;
   uint8_t n = current_instruction & 0x000F;
 
+  bool is_valid = true;
+
   // grab uppermost letter
   switch (current_instruction >> 12) {
     case 0x0:
       // 0x00E0 - CLS: Clear the display.
-      if (current_instruction & 0x0FFF == 0x0E0) {
+      if ((current_instruction & 0x0FFF) == 0x0E0) {
         for (auto &row : virtualDisplay)
           row.fill(false);
         break;
       }
       // 0x00EE - RET: Return from subroutine.
-      else if (current_instruction & 0x0FFF == 0x0EE) {
+      else if ((current_instruction & 0x0FFF) == 0x0EE) {
         pc = stack[sp--];
         break;
       }
@@ -54,7 +60,7 @@ void Chip8::execute_instruction() {
       break;
     case 0x5:
       // 0x5xy0 - SE Vx, Vy: Skip next instruction if Vx = Vy.
-      if (current_instruction & 0xF == 0x0) {
+      if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] == registers[y])
           pc += 2;
         break;
@@ -68,7 +74,7 @@ void Chip8::execute_instruction() {
       registers[x] += kk;
       break;
     case 0x8:
-      bool is_valid = true;
+      is_valid = true;
       switch (current_instruction & 0xF) {
         case 0x0:
           // 0x8xy0 - LD Vx, Vy: Set Vx = Vy.
@@ -131,7 +137,7 @@ void Chip8::execute_instruction() {
     
     case 0x9:
       // 0x9xy0 - SNE Vx, Vy: Skip next instruction if Vx != Vy.
-      if (current_instruction & 0xF == 0x0) {
+      if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] != registers[y])
           pc += 2;
         break;
@@ -148,7 +154,7 @@ void Chip8::execute_instruction() {
       // 0xCxkk - AND Vx, byte: Set Vx = random byte AND kk.
       registers[x] = (rand() & 0xFF) & kk;
       break;
-    case 0xD:
+    case 0xD: {
       // 0xDxyn - DRW Vx, Vy, nibble: Display n-byte sprite at (Vx, Vy).
 
       bool isCollision = 0;
@@ -169,22 +175,26 @@ void Chip8::execute_instruction() {
             isCollision = 1;
         }
       }
+
+      // tells main loop to draw when ready
+      drawFlag = true;
       break;
+    }
     case 0xE:
       // 0xEx9E - SKP x: Skip next instruction if key with value x is pressed.
-      if (current_instruction & 0xFF == 0x9E) {
+      if ((current_instruction & 0xFF) == 0x9E) {
         if (virtualKeys[x])
           pc += 2;
         break;
       }
       // 0xExA1 - SKNP x: Skip next instruction if key with value x is not pressed.
-      else if (current_instruction & 0xFF == 0xA1) {
+      else if ((current_instruction & 0xFF) == 0xA1) {
         if (!virtualKeys[x])
           pc += 2;
         break;
       }
     case 0xF:
-      bool is_valid = true;
+      is_valid = true;
       switch (current_instruction & 0xFF) {
         case 0x07:
           // 0xFx07 - LD Vx, DT: Set Vx = delay timer value.
@@ -252,6 +262,7 @@ void Chip8::execute_instruction() {
         break;
       }
     default:
+      break;
   }
 
   // go to next instruction

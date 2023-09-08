@@ -1,4 +1,5 @@
 #include <array>
+using namespace std;
 
 class Keyboard {
 public:
@@ -7,4 +8,6 @@ public:
    * indicates that a key is currently being pressed and `false` that it isn't.
   */
   void setKeys(array<bool, 16> &keys);
+
+  void shutDown();
 };

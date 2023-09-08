@@ -16,7 +16,7 @@ private:
   int16_t pc; // program counter
 
 public:
-  int drawFlag;
+  bool drawFlag = false;
 
   uint8_t dt; // delay timer
   uint8_t st; // sound timer

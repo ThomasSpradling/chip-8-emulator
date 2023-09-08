@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "System",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "web/dist/main.out.js"
+  },
+  "include": ["web/InputOutput/*"]
+}
