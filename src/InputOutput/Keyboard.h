@@ -4,10 +4,17 @@ using namespace std;
 class Keyboard {
 public:
   /**
-   * Changes the value of keys (by reference) to the currently pressed keys. Here, `true`
-   * indicates that a key is currently being pressed and `false` that it isn't.
+   * Copies the current keys into the value `keys`.
   */
-  void setKeys(array<bool, 16> &keys);
+  void copyKeys(array<bool, 16> &keys);
 
   void shutDown();
+
+  void setKey(int key, bool value);
+private:
+  array<bool, 16> currentKeys;
+
+  /**
+   * Sets the key `key` to be value `value`
+  */
 };

@@ -37,7 +37,7 @@ void Emulator::runCycle() {
 
   if (time == 0) {
     // input
-    keyboard->setKeys(chip8->virtualKeys);
+    keyboard->copyKeys(chip8->virtualKeys);
 
     // output
     if (chip8->drawFlag) {

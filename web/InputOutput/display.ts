@@ -1,7 +1,7 @@
 /**
- * Draws binary grid onto HTML canvas. Color of pixels are specified in
- * configs.
+ * Draws a single pixel at coordinates (x,y) in the HTML canvas. The color corresponds to either
+ * the primary color (for `true`) or the secondary color (for `false`)
  */
-const renderGrid = (grid: boolean[][]): void => {
-  console.log(grid);
-}
+const renderPixel = (x: number, y: number, color: boolean): void => {
+  console.log("Pixel drawn!", x, y, color);
+};
