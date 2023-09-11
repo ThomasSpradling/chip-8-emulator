@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=VT323&display=swap');
+
+body {
+  background-color: #CFC499;
+  font-family: monospace
+}
+header {
+  background-color: #8B9D72;
+  padding: 20px 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid black;
+
+  color: white;
+  text-shadow: 2px 2px 0px black;
+  font-family: 'VT323', monospace;
+
+  box-shadow: 5px 5px 0px #815E85;
+}
+header div {
+  padding: 10px;
+}
+header a {
+  font-size: 2rem;
+  margin: 10px;
+}
+h1 {
+  font-size: 3rem;
+  display: inline-block;
+}
+h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  font-family: 'VT323', monospace;
+}
+#wrapper {
+  width: 950px;
+  margin: 0 auto;
+}
+#game {
+  display: flex;
+  gap: 20px;
+  margin: 30px 0px;
+}
+
+/** Canvas **/
+#canvas {
+  background-color: black;
+  width: 640px;
+  height: 360px;
+}
+
+/** Description **/
+#description {
+  width: 350px;
+  padding: 10px;
+}
+
+/** Controls **/
+#controls {
+  width: 640px;
+  display: flex;
+  justify-content: space-between;
+}
+#options .select {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+  gap: 10px;
+  align-items: center;
+}
+
+#options .select select {
+  font-family: monospace;
+  flex-grow: 1;
+  border: 1px solid black;
+  padding: 5px 10px;
+  box-shadow: 3px 3px 0 #A66B6B;
+  background-color: antiquewhite;
+}
+#options .select select:focus {
+  outline: 4px solid #815E85;
+}
+
+#options label {
+  font-size: 1rem;
+}
+#keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+#keypad .key-button {
+  padding: 25px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  background-color: antiquewhite;
+  box-shadow: 3px 3px 0 #A66B6B;
+  cursor: pointer;
+  position: relative;
+}
+#keypad .key-button:focus {
+  outline: 3px solid #815E85;
+}
+#keypad .key-button:hover {
+  background-color: rgb(227, 196, 155);
+}
+#keypad .key-button:active, .active {
+  top: 2px;
+  left: 2px;
+  box-shadow: 1px 1px 0 #A66B6B;
+  background-color: rgb(227, 196, 155);
+}

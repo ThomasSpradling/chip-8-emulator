@@ -10,9 +10,9 @@ class Emulator {
     ~Emulator();
     void runCycle();
     Keyboard *keyboard;
+    Chip8 *chip8;
 
   private:
-    Chip8 *chip8;
     Display *display;
     Speaker *speaker;
 };

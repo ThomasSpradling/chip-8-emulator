@@ -4,9 +4,79 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <script src="dist/main.out.js"></script>
+  <header>
+    <h1>Chip-8 Emulator</h1>
+    <div>
+      <a>about</a>
+      <a>source</a>
+    </div>
+  </header>
+  <main>
+    <div id="wrapper">
+      <div id="game">
+        <canvas id="canvas"></canvas>
+        <aside id="description">
+          <h2>Game Name</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo consectetur cupiditate fugiat atque repellendus itaque qui ratione omnis nam autem maiores, non facere! Maiores, iusto vitae iste cum aut accusamus?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae alias excepturi incidunt vitae voluptates eos placeat sequi ad architecto tenetur deserunt, adipisci consectetur, est officia, esse distinctio dolores voluptatibus obcaecati.</p>
+        </aside>
+      </div>
+      <div id="controls">
+        <div id="options">
+          <div class="select">
+            <select id="romSelector">
+              <option value="">Select ROM...</option>
+              <option value="game1">Game 1</option>
+              <option value="game2">Game 2</option>
+              <option value="game3">Game 3</option>
+              <option value="game4">Game 4</option>
+            </select>
+          </div>
+          <div class="select">
+            <label>Theme:</label>
+            <select id="themeSelector">
+              <option value="basic">Basic</option>
+              <option value="red">red</option>
+            </select>
+          </div>
+        </div>
+        <div id="keypad">
+          <button type="button" class="key-button" id="button-1">1</button>
+          <button type="button" class="key-button" id="button-2">2</button>
+          <button type="button" class="key-button" id="button-3">3</button>
+          <button type="button" class="key-button" id="button-4">C</button>
+          
+          <button type="button" class="key-button" id="button-q">4</button>
+          <button type="button" class="key-button" id="button-w">5</button>
+          <button type="button" class="key-button" id="button-e">6</button>
+          <button type="button" class="key-button" id="button-r">D</button>
+  
+          <button type="button" class="key-button" id="button-a">7</button>
+          <button type="button" class="key-button" id="button-s">8</button>
+          <button type="button" class="key-button" id="button-d">9</button>
+          <button type="button" class="key-button" id="button-f">E</button>
+  
+          <button type="button" class="key-button" id="button-z">A</button>
+          <button type="button" class="key-button" id="button-x">0</button>
+          <button type="button" class="key-button" id="button-c">B</button>
+          <button type="button" class="key-button" id="button-v">F</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    var Module = {
+      onRuntimeInitialized: function() {
+        initKeyboard();
+        initROMLoader();
+      },
+    };
+  </script>
   <script src="dist/emulator.out.js"></script>
+  <script>window.Module = Module;</script>
+  <script src="dist/main.out.js"></script>
 </body>
 </html>

@@ -1,18 +1,68 @@
 #include "Chip8.h"
-#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <string>
 
+using namespace std;
+
+Chip8::Chip8() {
+  indexToRomName = {"ok.txt", "ok.txt"};
+  init();
+}
+
+/**
+ * Resets the memory, registers, stack, input, and output. This includes
+ * copying the font set to memory.
+*/
 void Chip8::init() {
   registers.fill(0);
-  dt = st = I = sp = pc = 0;
+  dt = st = I = sp = 0;
+  pc = 0x200;
 
   stack.fill(0);
   memory.fill(0);
 }
 
-void Chip8::fetch_instruction() {
-  current_instruction = (memory[pc * 2 + 0x200] << 8) | memory[pc * 2 + 0x200 + 1];
+void Chip8::incrementPC(uint16_t amount = 1) {
+  pc = pc + amount * 2;
+}
+void Chip8::decrementPC(uint16_t amount = 1) {
+  pc = pc - amount * 2;
 }
 
+/**
+ * Loads ROM with number `value`.
+*/
+void Chip8::loadROM(const string &filename) {
+  init();
+
+  string filePath = "./roms/" + filename;
+  ifstream ifile (filePath, ios::binary);
+  if (!ifile.is_open()) {
+    cerr << "Unable to open file.\n";
+    return;
+  }
+
+  size_t index = 0x200;
+  while (!ifile.eof() && index < memory.size()) {
+    char byte;
+    ifile.read(&byte, 1);
+    memcpy(&memory[index], &byte, 1);
+    ++index;
+  }
+  ifile.close();
+}
+
+/**
+ * Fetches the current instruction and puts it into `current_instruction`
+*/
+void Chip8::fetch_instruction() {
+  current_instruction = (memory[pc] << 8) | memory[pc + 2];
+}
+
+/**
+ * Executes instructions based on opcode.
+*/
 void Chip8::execute_instruction() {
   fetch_instruction();
 
@@ -62,7 +112,7 @@ void Chip8::execute_instruction() {
       // 0x5xy0 - SE Vx, Vy: Skip next instruction if Vx = Vy.
       if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] == registers[y])
-          pc += 2;
+          incrementPC(2);
         break;
       }
     case 0x6:
@@ -139,7 +189,7 @@ void Chip8::execute_instruction() {
       // 0x9xy0 - SNE Vx, Vy: Skip next instruction if Vx != Vy.
       if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] != registers[y])
-          pc += 2;
+          incrementPC(2);
         break;
       }
     case 0xA:
@@ -184,13 +234,13 @@ void Chip8::execute_instruction() {
       // 0xEx9E - SKP x: Skip next instruction if key with value x is pressed.
       if ((current_instruction & 0xFF) == 0x9E) {
         if (virtualKeys[x])
-          pc += 2;
+          incrementPC(2);
         break;
       }
       // 0xExA1 - SKNP x: Skip next instruction if key with value x is not pressed.
       else if ((current_instruction & 0xFF) == 0xA1) {
         if (!virtualKeys[x])
-          pc += 2;
+          incrementPC(2);
         break;
       }
     case 0xF:
@@ -210,7 +260,7 @@ void Chip8::execute_instruction() {
             }
           }
           // if no key is pressed, then skip this instruction cycle and try again
-          pc--;
+          decrementPC();
           break;
 
         case 0x15:
@@ -266,5 +316,5 @@ void Chip8::execute_instruction() {
   }
 
   // go to next instruction
-  pc++;
+  incrementPC();
 }

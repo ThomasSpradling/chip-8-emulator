@@ -6,5 +6,6 @@
     "preserveConstEnums": true,
     "outFile": "web/dist/main.out.js"
   },
-  "include": ["web/InputOutput/*"]
+  "include": ["web/**/*"],
+  "exclude": ["node_modules"]
 }

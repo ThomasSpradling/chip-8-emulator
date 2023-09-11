@@ -5,3 +5,21 @@
 const renderPixel = (x: number, y: number, color: boolean): void => {
   console.log("Pixel drawn!", x, y, color);
 };
+
+const themes = {
+  basic: {
+    primary: 'white',
+    secondary: 'black'
+  },
+  red: {
+    primary: 'r',
+    secondary: 'g'
+  },
+};
+
+let currentTheme = themes['basic'];
+const themeSelector = document.getElementById('themeSelector');
+themeSelector.addEventListener('change', (e) => {
+  currentTheme = themes[(e.target as HTMLSelectElement).value as keyof typeof themes];
+  console.log(currentTheme);
+});

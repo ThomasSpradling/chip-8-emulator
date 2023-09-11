@@ -3,4 +3,4 @@
  */
 const playSound = (): void => {
   console.log('BEEP!');
-}
+};

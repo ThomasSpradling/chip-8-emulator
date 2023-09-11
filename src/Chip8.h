@@ -1,5 +1,6 @@
 #include <vector>
 #include <array>
+#include <string>
 using namespace std;
 
 class Chip8 {
@@ -13,7 +14,10 @@ private:
   uint8_t sp; // stack pointer
   array<uint16_t, 16> stack; // array of at most 16 addresses
 
-  int16_t pc; // program counter
+  uint16_t pc; // program counter
+
+  // array<string, 2> indexToRomName = {"example.txt", "example2.txt"};
+  array<string, 2> indexToRomName;
 
 public:
   bool drawFlag = false;
@@ -24,24 +28,11 @@ public:
   array<array<bool, 64>, 32> virtualDisplay; // 32x64 virtual display
   array<bool, 16> virtualKeys; // 16 keys
 
-  /**
-   * Resets the memory, registers, stack, input, and output. This includes
-   * copying the font set to memory.
-  */
+  Chip8();
   void init();
-
-  /**
-   * Makes a call to `init` and loads `buf` into memory starting at 0x200.
-  */
-  int load(const vector<char> &buf);
-
-  /**
-   * Fetches the current instruction and puts it into `current_instruction`
-  */
+  void loadROM(const string &filename);
   void fetch_instruction();
-
-  /**
-   * Executes instructions based on opcode.
-  */
   void execute_instruction();
+  void incrementPC(uint16_t amount);
+  void decrementPC(uint16_t amount);
 };

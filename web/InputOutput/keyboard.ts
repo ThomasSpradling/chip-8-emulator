@@ -5,18 +5,26 @@ const keypad = {
   z: 0xA, x: 0x0, c: 0xB, v: 0xF,
 };
 
-const performKeyAction = (e: KeyboardEvent, forwardValue: boolean) => {
-  if (e.key in keypad)
-    Module.setKey(e.key, forwardValue);
+const keys = document.getElementsByClassName('key-button');
+for (let i = 0; i < keys.length; i++) {
+  const id = keys[i].id.substring(7);
+  keys[i].addEventListener('mousedown', () => performKeyAction(id, true));
+  keys[i].addEventListener('mouseup', () => performKeyAction(id, false));
 }
 
-var Module = {
-  /**
-   * On key press, calls a C++ function to update keyboard.
-   */
-  setKey: (a: string, value: boolean) => {},
-  onRuntimeInitialized: function() {
-    window.addEventListener('keydown', (e: KeyboardEvent) => performKeyAction(e, true));
-    window.addEventListener('keyup', (e: KeyboardEvent) => performKeyAction(e, false));
-  },
+const performKeyAction = (key: string, forwardValue: boolean) => {
+  if (key in keypad) {
+    (window as any).Module.setKey(keypad[key as keyof typeof keypad], forwardValue);
+    const button = document.getElementById(`button-${key}`);
+    if (forwardValue) {
+      button?.classList.add('active');
+    } else {
+      button?.classList.remove('active');
+    }
+  }
+}
+
+const initKeyboard = () => {
+  window.addEventListener('keydown', (e: KeyboardEvent) => performKeyAction(e.key, true));
+  window.addEventListener('keyup', (e: KeyboardEvent) => performKeyAction(e.key, false));
 };
