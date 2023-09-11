@@ -1,5 +1,6 @@
 #include "Emulator.h"
 #include <algorithm>
+#include <iostream>
 using namespace std;
 
 
@@ -33,26 +34,23 @@ Emulator::~Emulator() {
  * this is implemented using a time variable.
 */
 void Emulator::runCycle() {
-  chip8->execute_instruction();
-
-  if (time == 0) {
-    // input
-    keyboard->copyKeys(chip8->virtualKeys);
-
-    // output
-    if (chip8->drawFlag) {
-      display->drawDisplay(chip8->virtualDisplay);
-      chip8->drawFlag = false;
-    }
-
-    // update counters
-    if (chip8->dt > 0) {
-      chip8->dt = max(chip8->dt, (uint8_t) 0);
-    }
-    if (chip8->st > 0) {
-      chip8->st = max(chip8->st, (uint8_t) 0);
-      speaker->playSound();
-    }
+  for (int i = 0; i < 9; i++) {
+    chip8->execute_instruction();
   }
-  time = (time + 1) % 9;
+  // input
+  keyboard->copyKeys(chip8->virtualKeys);
+
+  // output
+  if (chip8->drawFlag) {
+    display->drawDisplay(chip8->virtualDisplay);
+    chip8->drawFlag = false;
+  }
+  // update counters
+  if (chip8->dt > 0) {
+    chip8->dt = max(chip8->dt - 1, 0);
+  }
+  if (chip8->st > 0) {
+    chip8->st = max(chip8->st - 1, 0);
+    speaker->playSound();
+  }
 }

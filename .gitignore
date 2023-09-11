@@ -3,3 +3,4 @@
 *.wasm
 node_modules
 dist
+test.txt

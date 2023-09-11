@@ -8,8 +8,7 @@ void Keyboard::copyKeys(array<bool, 16> &keys) {
 }
 
 void Keyboard::setKey(int key, bool value) {
-  cout << key << value << endl;
-  // currentKeys[key] = value;
+  currentKeys[key] = value;
 }
 
 void Keyboard::shutDown() {}

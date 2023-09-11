@@ -5,7 +5,7 @@
 
 class Emulator {
   public:
-    int time;
+    int time = 0;
     Emulator();
     ~Emulator();
     void runCycle();

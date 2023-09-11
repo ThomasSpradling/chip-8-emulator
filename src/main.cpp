@@ -12,7 +12,6 @@ void mainLoopCallback() {
 }
 
 void loadROM(const string &filename) {
-  // cout << value << endl;
   emulator->chip8->loadROM(filename);
 }
 

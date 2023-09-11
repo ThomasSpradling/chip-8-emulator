@@ -2,11 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <emscripten.h>
 
 using namespace std;
 
 Chip8::Chip8() {
-  indexToRomName = {"ok.txt", "ok.txt"};
   init();
 }
 
@@ -15,12 +15,21 @@ Chip8::Chip8() {
  * copying the font set to memory.
 */
 void Chip8::init() {
+  for (auto &row : virtualDisplay)
+    row.fill(false);
+
   registers.fill(0);
   dt = st = I = sp = 0;
   pc = 0x200;
+  drawFlag = true;
 
   stack.fill(0);
   memory.fill(0);
+
+  // add letters
+  for (int i = 0; i < 80; i++) {
+    memory[i] = FONTS[i];
+  }
 }
 
 void Chip8::incrementPC(uint16_t amount = 1) {
@@ -37,18 +46,18 @@ void Chip8::loadROM(const string &filename) {
   init();
 
   string filePath = "./roms/" + filename;
-  ifstream ifile (filePath, ios::binary);
+  ifstream ifile(filePath, ios::binary);
   if (!ifile.is_open()) {
     cerr << "Unable to open file.\n";
     return;
   }
 
   size_t index = 0x200;
-  while (!ifile.eof() && index < memory.size()) {
-    char byte;
-    ifile.read(&byte, 1);
-    memcpy(&memory[index], &byte, 1);
-    ++index;
+  unsigned char byte;
+
+  while (ifile.read(reinterpret_cast<char*>(&byte), 1) && index < memory.size()) {
+      memory[index] = byte;
+      ++index;
   }
   ifile.close();
 }
@@ -57,7 +66,7 @@ void Chip8::loadROM(const string &filename) {
  * Fetches the current instruction and puts it into `current_instruction`
 */
 void Chip8::fetch_instruction() {
-  current_instruction = (memory[pc] << 8) | memory[pc + 2];
+  current_instruction = (memory[pc] << 8) | memory[pc + 1];
 }
 
 /**
@@ -73,6 +82,7 @@ void Chip8::execute_instruction() {
   uint8_t n = current_instruction & 0x000F;
 
   bool is_valid = true;
+  uint8_t randomByte;
 
   // grab uppermost letter
   switch (current_instruction >> 12) {
@@ -81,38 +91,42 @@ void Chip8::execute_instruction() {
       if ((current_instruction & 0x0FFF) == 0x0E0) {
         for (auto &row : virtualDisplay)
           row.fill(false);
+        drawFlag = true;
         break;
       }
       // 0x00EE - RET: Return from subroutine.
       else if ((current_instruction & 0x0FFF) == 0x0EE) {
-        pc = stack[sp--];
+        pc = stack[--sp];
         break;
       }
       // 0x0nnn - SYS addr: Jump to machine code routine at address nnn.
-      else break; // SYS addr is ignored in modern interpreters
+      else break;
     case 0x1:
       // 0x1nnn - JP addr: Jump to address nnn.
       pc = nnn;
+      decrementPC();
       break;
     case 0x2:
       // 0x2nnn - CALL addr: Call subroutine at address nnn.
-      stack[++sp] = (pc = nnn);
+      stack[sp++] = pc;
+      pc = nnn;
+      decrementPC();
       break;
     case 0x3:
       // 0x3xkk - SE x, kk: Skip next instruction if Vx = kk.
       if (registers[x] == kk)
-        pc += 2;
+        incrementPC();
       break;
     case 0x4:
       // 0x4xkk - SNE Vx, byte: Skip next instruction if Vx != kk.
       if (registers[x] != kk)
-        pc += 2;
+        incrementPC();
       break;
     case 0x5:
       // 0x5xy0 - SE Vx, Vy: Skip next instruction if Vx = Vy.
       if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] == registers[y])
-          incrementPC(2);
+          incrementPC();
         break;
       }
     case 0x6:
@@ -150,12 +164,12 @@ void Chip8::execute_instruction() {
           // 0x8xy4 - ADD Vx, Vy: Set Vx = Vx + Vy, set VF = carry.
           // overflow case automatically handled
           registers[x] += registers[y];
-          registers[0xF] = (uint8_t) (UINT8_MAX - registers[x] < registers[y]);
+          registers[0xF] = (uint8_t) ((UINT8_MAX - registers[x]) < registers[y]);
           break;
 
         case 0x5:
           // 0x8xy5 - SUB Vx, Vy: Set Vx = Vx - Vy, set VF = NOT borrow.
-          registers[0xF] = (uint8_t) registers[x] > registers[y];
+          registers[0xF] = (uint8_t) registers[x] >= registers[y];
           registers[x] -= registers[y];
           break;
 
@@ -167,7 +181,7 @@ void Chip8::execute_instruction() {
 
         case 0x7:
           // 0x8xy7 - SUBN Vx, Vy: Set Vx = Vy - Vx, set VF = NOT borrow.
-          registers[0xF] = (uint8_t) registers[y] > registers[x];
+          registers[0xF] = (uint8_t) registers[y] >= registers[x];
           registers[x] = registers[y] - registers[x];
           break;
 
@@ -189,7 +203,7 @@ void Chip8::execute_instruction() {
       // 0x9xy0 - SNE Vx, Vy: Skip next instruction if Vx != Vy.
       if ((current_instruction & 0xF) == 0x0) {
         if (registers[x] != registers[y])
-          incrementPC(2);
+          incrementPC();
         break;
       }
     case 0xA:
@@ -199,10 +213,14 @@ void Chip8::execute_instruction() {
     case 0xB:
       // 0xBnnn - JP V0, addr: Jump to nnn + V0.
       pc = nnn + registers[0x0];
+      decrementPC();
       break;
     case 0xC:
       // 0xCxkk - AND Vx, byte: Set Vx = random byte AND kk.
-      registers[x] = (rand() & 0xFF) & kk;
+      randomByte = EM_ASM_INT({
+        return Math.floor(Math.random() * (0xFF + 1));
+      });
+      registers[x] = randomByte & kk;
       break;
     case 0xD: {
       // 0xDxyn - DRW Vx, Vy, nibble: Display n-byte sprite at (Vx, Vy).
@@ -217,30 +235,32 @@ void Chip8::execute_instruction() {
           int y0 = (registers[y] + j) % 32;
 
           // XOR out screen location (x, y) with i-th bit of j-th byte
-          int temp = virtualDisplay[x0][y0];
-          virtualDisplay[x0][y0] ^= ((memory[I + j] >> (8 - i)) & 1);
+          int temp = virtualDisplay[y0][x0];
+          virtualDisplay[y0][x0] ^= ((memory[I + j] >> (8 - i)) & 1);
 
           // if any bit went from set to unset
-          if (temp == 1 && virtualDisplay[x0][y0] == 0)
+          if (temp == 1 && virtualDisplay[y0][x0] == 0)
             isCollision = 1;
         }
       }
+      registers[0xF] = isCollision;
 
       // tells main loop to draw when ready
       drawFlag = true;
       break;
+
     }
     case 0xE:
       // 0xEx9E - SKP x: Skip next instruction if key with value x is pressed.
       if ((current_instruction & 0xFF) == 0x9E) {
-        if (virtualKeys[x])
-          incrementPC(2);
+        if (virtualKeys[registers[x]])
+          incrementPC();
         break;
       }
       // 0xExA1 - SKNP x: Skip next instruction if key with value x is not pressed.
       else if ((current_instruction & 0xFF) == 0xA1) {
-        if (!virtualKeys[x])
-          incrementPC(2);
+        if (!virtualKeys[registers[x]])
+          incrementPC();
         break;
       }
     case 0xF:
@@ -256,6 +276,7 @@ void Chip8::execute_instruction() {
           for (int i = 0; i < virtualKeys.size(); i++) {
             if (virtualKeys[i]) {
               registers[x] = (uint8_t) i;
+              incrementPC();
               break;
             }
           }
@@ -280,7 +301,7 @@ void Chip8::execute_instruction() {
 
         case 0x29:
           // 0xFx29 - LD F, Vx: Set I = location of sprite for digit Vx.
-// TODO
+          I = registers[x] * 5;
           break;
 
         case 0x33:

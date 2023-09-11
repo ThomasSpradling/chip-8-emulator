@@ -18,10 +18,19 @@
   <main>
     <div id="wrapper">
       <div id="game">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" width="640" height="320"></canvas>
         <aside id="description">
-          <h2>Game Name</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo consectetur cupiditate fugiat atque repellendus itaque qui ratione omnis nam autem maiores, non facere! Maiores, iusto vitae iste cum aut accusamus?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae alias excepturi incidunt vitae voluptates eos placeat sequi ad architecto tenetur deserunt, adipisci consectetur, est officia, esse distinctio dolores voluptatibus obcaecati.</p>
+          <h2 id="game-title">Instructions:</h2>
+          <h3 id="game-author"></h3>
+          <p id="game-description">
+            Select a ROM to start playing. The original CHIP-8 keyboard layout is mapped
+            to the PC keyboard layout as follows:
+            <br><br>
+            1 2 3 C  →  1 2 3 4<br>
+            4 5 6 D  →  Q W E R<br>
+            7 8 9 E  →  A S D F<br>
+            A 0 B F  →  Z X C V<br>
+          </p>
         </aside>
       </div>
       <div id="controls">
@@ -29,17 +38,26 @@
           <div class="select">
             <select id="romSelector">
               <option value="">Select ROM...</option>
-              <option value="game1">Game 1</option>
-              <option value="game2">Game 2</option>
-              <option value="game3">Game 3</option>
-              <option value="game4">Game 4</option>
+              <option value="puzzle15">15 PUZZLE</option>
+              <option value="brick">BRICK</option>
+              <option value="brix">BRIX</option>
+              <option value="dangerous">MOST DANGEROUS GAME</option>
+              <option value="maze">MAZE</option>
+              <option value="pong">PONG</option>
+              <option value="sierpinski">SIERPINSKI</option>
+              <option value="spaceinvaders">SPACE INVADERS</option>
+              <option value="tictactoe">TIC-TAC-TOE</option>
+              <option value="zero">ZERO</option>
             </select>
           </div>
           <div class="select">
             <label>Theme:</label>
             <select id="themeSelector">
-              <option value="basic">Basic</option>
-              <option value="red">red</option>
+              <option value="Classic Mono">Classic Mono</option>
+              <option value="Retro Green">Retro Green</option>
+              <option value="Cyberpunk Blue">Cyberpunk Blue</option>
+              <option value="High Contrast">High Contrast</option>
+              <option value="Fire and Ice">Fire and Ice</option>
             </select>
           </div>
         </div>
