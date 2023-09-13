@@ -1,5 +1,13 @@
 # Chip 8 Emulator
 
+[![C++](https://img.shields.io/badge/C++-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B)
+[![TypeScript](https://img.shields.io/badge/TypeScript-blue.svg)](https://www.typescriptlang.org/)
+[![HTML5](https://img.shields.io/badge/HTML5-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
+[![CSS3](https://img.shields.io/badge/CSS3-blue.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Node.js](https://img.shields.io/badge/Node.js-green.svg)](https://nodejs.org/)
+[![Makefile](https://img.shields.io/badge/Makefile-lightgrey.svg)](https://www.gnu.org/software/make/)
+[![Python](https://img.shields.io/badge/Python-blue.svg)](https://www.python.org/)
+
 ## About
 [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) is an interpreted assembly-like programming designed in the mid-1970s for some early microprocessors. It was primarily used for hobbyists to create simple video games, demonstrations, and even to be used to implement graph calculators. CHIP-8 programs had a simple instruction set whose focus was specifically around input, graphics, and audio.
 
