@@ -7,8 +7,6 @@ A CHIP-8 emulator is a software that mimics the behavior of the original virtual
 
 I also included a few preloaded ROMs that users can access to play some of the original CHIP-8 games and demonstrations. This project overally served primarily to practice my programming skills with C++ and how it interfaces with the web via the [Emscripten](https://emscripten.org/) compiler toolchain.
 
-You can view the source code of this project on my GitHub page by clicking [here](https://github.com/ThomasSpradling/chip-8-emulator)!
-
 ## Install
 If you want to use it on your local machine, start by cloning this repo:
 ```bash
