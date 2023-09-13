@@ -1,6 +1,6 @@
 build: clean source-emscripten make-dist build-emscripten
 
-install-emscripten:
+install:
 	mkdir ~/emscripten; cd ~/emscripten; git clone https://github.com/emscripten-core/emsdk.git; cd emsdk; git pull; ./emsdk install latest; ./emsdk activate latest
 
 clean:
