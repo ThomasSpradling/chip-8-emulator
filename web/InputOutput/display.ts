@@ -23,8 +23,8 @@ const themes = {
 
 let currentTheme = themes['Classic Mono'];
 const themeSelector = document.getElementById('themeSelector');
-themeSelector.blur();
 themeSelector.addEventListener('change', (e) => {
+  themeSelector.blur();
   currentTheme = themes[(e.target as HTMLSelectElement).value as keyof typeof themes];
 });
 

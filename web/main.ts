@@ -138,9 +138,9 @@ const ROMS: {
 const initROMLoader = () => {
   let currentRom = null;
   const romSelector = document.getElementById('romSelector');
-  romSelector.blur();
 
   romSelector.addEventListener('change', (e) => {
+    romSelector.blur();
     currentRom = ROMS[(e.target as HTMLSelectElement).value as keyof typeof ROMS];
     if (currentRom) {
       const description = document.getElementById('game-description');
