@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Chip-8 Emulator</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a id="title-link" href="index.html"><h1>CHIP-8 Emulator</h1></a>
+    <div>
+      <a href="about.html">about</a>
+      <a href="https://github.com/ThomasSpradling/chip-8-emulator">source</a>
+    </div>
+  </header>
+  <main class="main">
+    <h2>About CHIP-8 Emulator</h2>
+    <p><a class="content-link" href="https://en.wikipedia.org/wiki/CHIP-8">CHIP-8</a> is an interpreted assembly-like programming designed in the mid-1970s for some early microprocessors. It was primarily used for hobbyists to create simple video games, demonstrations, and even to be used to implement graph calculators. CHIP-8 programs had a simple instruction set whose focus was specifically around input, graphics, and audio.</p>
+    <p>A CHIP-8 emulator is a software that mimics the behavior of the original virtual machine on modern platforms. This small project is my exercise towards that attempt. Currently, all features from the original CHIP-8 instruction set are implemented as well as input-detection and a display written over the HTML <a class="content-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>. I decided not to implement the monotone audio feature associated with CHIP-8 not to distract web users, who typically wouldn't prefer sound playing from websites.</p>
+    <p>I also included a few preloaded ROMs that users can access to play some of the original CHIP-8 games and demonstrations. This project overally served primarily to practice my programming skills with C++ and how it interfaces with the web via the <a class="content-link" href="https://emscripten.org/">Emscripten</a> compiler toolchain.</p>
+    <p>You can view the source code of this project on my GitHub page by clicking <a class="content-link" href="https://github.com/ThomasSpradling/chip-8-emulator">here</a>!</p>
+  </main>
+</body>
+</html>

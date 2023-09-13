@@ -1,8 +1,7 @@
 {
   "scripts": {
-    "build": "npm run build-c++; npm run build-ts",
-    "build-c++": "em++ -O3 -s WASM=1 -s USE_SDL=2 src/main.cpp src/Emulator.cpp src/Chip8.cpp src/InputOutput/Keyboard.cpp src/InputOutput/Display.cpp src/InputOutput/Speaker.cpp -o web/dist/emulator.out.js",
-    "build-ts": "npx tsc"
+    "start": "node server/main.js",
+    "build": "make build; npx tsc"
   },
   "dependencies": {
     "express": "^4.18.2"
